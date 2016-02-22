@@ -1,0 +1,12 @@
+EECS 339 WQ 2016
+Lab 2 Writeup
+Jacob Bruce
+Worked with: Jennie Werner
+
+Design Decisions: We did not do much in the way of design decisions. We used a nested loops join, and chose the page to evict at random.
+
+API: We did not make any changes to the API
+
+Code: Our code passes all of the unit tests and system tests running in Eclipse, and we believe it to be complete and correct. We were unable to get it running from the terminal with ant, but we think that was just a problem with the way our directory/build was put together, not with the code (as it passes all of the tests in Eclipse).
+
+Time: We spent 12 hours working on the lab together, and more working apart (I probably spent another 4 hours on the lab outside of our meetings). We found the whole thing difficult, but the writing of pages and files to the disc versus to the BufferPool was especially so. We didn't feel like this was well-documented anywhere (and are still very confused that none of this is explained in class) and struggled to implement it. We had to guess at a couple of different strategies before we got it right.
