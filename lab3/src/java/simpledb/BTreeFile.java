@@ -481,10 +481,10 @@ public class BTreeFile implements DbFile {
 		
 		// first, check that it's valid to insert
 		
-		if(parent.getNumEmptySlots() == parent.getMaxEntries()){
+		//if(parent.getNumEmptySlots() == parent.getMaxEntries()){
 			// if the parent is empty, insert it - it should work
-			parent.insertEntry(entry);
-		}
+		parent.insertEntry(entry);
+		//}
 		
 		
 		
@@ -782,6 +782,37 @@ public class BTreeFile implements DbFile {
         // Move some of the tuples from the sibling to the page so
 		// that the tuples are evenly distributed. Be sure to update
 		// the corresponding parent entry.
+		
+		Iterator <Tuple> tupIt;
+		
+		int totalTuples = page.getNumTuples() + sibling.getNumTuples();
+		int halfFull = totalTuples/2;		
+		
+		if(isRightSibling){
+			tupIt = sibling.iterator();
+		}else{
+			tupIt = sibling.reverseIterator();
+		}
+		
+		Tuple currTuple = tupIt.next();
+		
+		while(page.getNumTuples() < halfFull){
+
+			sibling.deleteTuple(currTuple);
+			page.insertTuple(currTuple);
+			if(!isRightSibling){
+				entry.setKey(currTuple.getField(0));
+				parent.updateEntry(entry);
+			}
+			currTuple = tupIt.next();
+			if(isRightSibling){
+				entry.setKey(currTuple.getField(0));
+				parent.updateEntry(entry);
+			}
+		}
+		
+		return;
+		
 	}
 
 	/**
@@ -864,6 +895,42 @@ public class BTreeFile implements DbFile {
 		// the corresponding parent entry. Be sure to update the parent
 		// pointers of all children in the entries that were moved.
 		
+		Iterator <BTreeEntry> entIt;
+		
+		int totalEntries = page.getNumEntries() + leftSibling.getNumEntries();
+		int halfFull = totalEntries/2;	
+		
+		entIt = leftSibling.reverseIterator();
+		
+		BTreeEntry currEnt;
+		Field moveKey;
+		Field parentKey;
+		
+		while(page.getNumEntries() < halfFull){
+
+			currEnt = entIt.next();
+			
+			moveKey = currEnt.getKey();
+			
+			parentKey = leftEntry.getKey();
+			
+			leftSibling.deleteKeyAndRightChild(currEnt);
+			currEnt.setKey(parentKey);
+		
+			currEnt.setLeftChild(currEnt.getRightChild());
+			currEnt.setRightChild(page.getChildId(0));
+			
+			page.insertEntry(currEnt);
+			
+			leftEntry.setKey(moveKey);
+			parent.updateEntry(leftEntry);
+			
+		}
+		
+		this.updateParentPointers(tid, dirtypages, page);
+		
+		return;
+		
 	}
 	
 	/**
@@ -893,6 +960,43 @@ public class BTreeFile implements DbFile {
 		// that the entries are evenly distributed. Be sure to update
 		// the corresponding parent entry. Be sure to update the parent
 		// pointers of all children in the entries that were moved.
+		
+		Iterator <BTreeEntry> entIt;
+		
+		int totalEntries = page.getNumEntries() + rightSibling.getNumEntries();
+		int halfFull = totalEntries/2;	
+		
+		entIt = rightSibling.iterator();
+		
+		BTreeEntry currEnt;
+		Field moveKey;
+		Field parentKey;
+		
+		while(page.getNumEntries() < halfFull){
+
+			currEnt = entIt.next();
+			
+			moveKey = currEnt.getKey();
+			
+			parentKey = rightEntry.getKey();
+			
+			rightSibling.deleteKeyAndLeftChild(currEnt);
+			currEnt.setKey(parentKey);
+		
+			currEnt.setRightChild(currEnt.getLeftChild());
+			currEnt.setLeftChild(page.reverseIterator().next().getRightChild());
+			
+			page.insertEntry(currEnt);
+			
+			rightEntry.setKey(moveKey);
+			parent.updateEntry(rightEntry);
+			
+		}
+		
+		this.updateParentPointers(tid, dirtypages, page);
+		
+		return;
+		
 	}
 	
 	/**
