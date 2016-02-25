@@ -1131,10 +1131,6 @@ public class BTreeFile implements DbFile {
 
 		this.setEmptyPage(tid, dirtypages, rightPage.getId().pageNumber());
 		
-		// update parent pointers
-		
-		this.updateParentPointers(tid, dirtypages, leftPage);
-		
 	}
 	
 	/**

@@ -1027,46 +1027,6 @@ public class BTreeFile implements DbFile {
 		// the sibling pointers, and make the right page available for reuse.
 		// Delete the entry in the parent corresponding to the two pages that are merging -
 		// deleteParentEntry() will be useful here
-		
-		// move tuples from right to left
-		
-		Iterator<Tuple> rightIt = rightPage.iterator();
-		Tuple currTup;
-		
-		while(rightIt.hasNext()){
-			currTup = rightIt.next();
-			rightPage.deleteTuple(currTup);
-			leftPage.insertTuple(currTup);
-		}
-		
-		// update dirtypages
-		
-		dirtypages.put(rightPage.getId(), rightPage);
-		dirtypages.put(leftPage.getId(), leftPage);
-		
-		// update the sibling pointers
-		
-		leftPage.setRightSiblingId(rightPage.getRightSiblingId());
-		
-		BTreePageId rightRightId = rightPage.getRightSiblingId();
-		
-		if(rightRightId != null){
-		
-			BTreeLeafPage rightRight = ((BTreeLeafPage) this.getPage(tid, dirtypages, rightRightId, Permissions.READ_WRITE));
-			rightRight.setLeftSiblingId(leftPage.getId());
-			dirtypages.put(rightRightId, rightRight);
-		
-		}
-		
-		// update the parent
-		
-		this.deleteParentEntry(tid, dirtypages, leftPage, parent, parentEntry);
-		
-		// delete the page
-		
-		this.setEmptyPage(tid, dirtypages, rightPage.getId().pageNumber());
-		
-		
 	}
 
 	/**
@@ -1100,41 +1060,6 @@ public class BTreeFile implements DbFile {
 		// and make the right page available for reuse
 		// Delete the entry in the parent corresponding to the two pages that are merging -
 		// deleteParentEntry() will be useful here
-		
-		// move tuples from right to left
-
-		
-
-		BTreeEntry middleEnt = new BTreeEntry(parentEntry.getKey(),leftPage.reverseIterator().next().getRightChild(),rightPage.iterator().next().getLeftChild());
-		
-		leftPage.insertEntry(middleEnt);
-		
-		Iterator<BTreeEntry> rightIt = rightPage.iterator();
-		BTreeEntry currEnt;
-		
-		while(rightIt.hasNext()){
-			currEnt = rightIt.next();
-			rightPage.deleteKeyAndLeftChild(currEnt);
-			leftPage.insertEntry(currEnt);
-		}
-
-		// update dirtypages
-
-		dirtypages.put(rightPage.getId(), rightPage);
-		dirtypages.put(leftPage.getId(), leftPage);
-
-		// update the parent
-
-		this.deleteParentEntry(tid, dirtypages, leftPage, parent, parentEntry);
-
-		// delete the page
-
-		this.setEmptyPage(tid, dirtypages, rightPage.getId().pageNumber());
-		
-		// update parent pointers
-		
-		this.updateParentPointers(tid, dirtypages, leftPage);
-		
 	}
 	
 	/**

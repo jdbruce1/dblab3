@@ -1103,15 +1103,9 @@ public class BTreeFile implements DbFile {
 		
 		// move tuples from right to left
 
-		
-
-		BTreeEntry middleEnt = new BTreeEntry(parentEntry.getKey(),leftPage.reverseIterator().next().getRightChild(),rightPage.iterator().next().getLeftChild());
-		
-		leftPage.insertEntry(middleEnt);
-		
 		Iterator<BTreeEntry> rightIt = rightPage.iterator();
 		BTreeEntry currEnt;
-		
+
 		while(rightIt.hasNext()){
 			currEnt = rightIt.next();
 			rightPage.deleteKeyAndLeftChild(currEnt);
@@ -1130,10 +1124,6 @@ public class BTreeFile implements DbFile {
 		// delete the page
 
 		this.setEmptyPage(tid, dirtypages, rightPage.getId().pageNumber());
-		
-		// update parent pointers
-		
-		this.updateParentPointers(tid, dirtypages, leftPage);
 		
 	}
 	
