@@ -1030,8 +1030,6 @@ public class BTreeFile implements DbFile {
 		
 		// move tuples from right to left
 		
-		System.out.println("current number of pages: " + this.numPages());
-		
 		Iterator<Tuple> rightIt = rightPage.iterator();
 		Tuple currTup;
 		
@@ -1041,18 +1039,16 @@ public class BTreeFile implements DbFile {
 			leftPage.insertTuple(currTup);
 		}
 		
-
+		// update dirtypages
+		
+		dirtypages.put(rightPage.getId(), rightPage);
+		dirtypages.put(leftPage.getId(), leftPage);
 		
 		// update the sibling pointers
 		
 		leftPage.setRightSiblingId(rightPage.getRightSiblingId());
 		
 		BTreePageId rightRightId = rightPage.getRightSiblingId();
-		
-		// update dirtypages
-		
-		dirtypages.put(rightPage.getId(), rightPage);
-		dirtypages.put(leftPage.getId(), leftPage);
 		
 		if(rightRightId != null){
 		
@@ -1065,13 +1061,12 @@ public class BTreeFile implements DbFile {
 		// update the parent
 		
 		this.deleteParentEntry(tid, dirtypages, leftPage, parent, parentEntry);
-		dirtypages.put(parent.getId(),parent);
 		
 		// delete the page
 		
 		this.setEmptyPage(tid, dirtypages, rightPage.getId().pageNumber());
-		System.out.println("current number of pages: " + this.numPages());
-
+		
+		
 	}
 
 	/**
@@ -1391,7 +1386,6 @@ public class BTreeFile implements DbFile {
 		// if there are no header pages, create the first header page and update
 		// the header pointer in the BTreeRootPtrPage
 		if(headerId == null) {
-			System.out.println("HEADER CREATED");
 			rootPtr = (BTreeRootPtrPage) getPage(tid, dirtypages, BTreeRootPtrPage.getId(tableid), Permissions.READ_WRITE);
 			
 			BTreeHeaderPage headerPage = (BTreeHeaderPage) getEmptyPage(tid, dirtypages, BTreePageId.HEADER);

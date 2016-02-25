@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="BTreeFileDeleteTest" project="lab3" tests="7" started="7" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.BTreeFileDeleteTest" time="22.679">
+    <testcase name="deleteTuple" classname="simpledb.BTreeFileDeleteTest" time="0.014"/>
+    <testcase name="testStealFromLeftLeafPage" classname="simpledb.BTreeFileDeleteTest" time="16.117"/>
+    <testcase name="testStealFromRightLeafPage" classname="simpledb.BTreeFileDeleteTest" time="0.011"/>
+    <testcase name="testMergeLeafPages" classname="simpledb.BTreeFileDeleteTest" time="0.014"/>
+    <testcase name="testStealFromLeftInternalPage" classname="simpledb.BTreeFileDeleteTest" time="6.231"/>
+    <testcase name="testStealFromRightInternalPage" classname="simpledb.BTreeFileDeleteTest" time="0.108"/>
+    <testcase name="testMergeInternalPages" classname="simpledb.BTreeFileDeleteTest" time="0.184"/>
+  </testsuite>
+</testrun>

@@ -202,105 +202,99 @@ public class BufferPool {
     		BTreeLeafPage page = (BTreeLeafPage) pageIn;
     		
     		page.deleteTuple(t);
+    		
+			
+
         	
-//    		if(page.getNumTuples() < page.getMaxTuples()/2){
-//    			BTreeLeafPage siblingPageL = null;
-//    			BTreeLeafPage siblingPageR = null;
-//    			PageId leftSiblingPageId = page.getLeftSiblingId();
-//    			PageId rightSiblingPageId = page.getRightSiblingId();
-//    			BTreeInternalPage parent = (BTreeInternalPage) this.getPage(tid, page.getParentId(), Permissions.READ_WRITE);
-//    			BTreeFile btfile = (BTreeFile) Database.getCatalog().getDatabaseFile(page.getId().getTableId());
-//    			boolean canMergeL = false;
-//    			boolean canMergeR = false;
-//
-//    			
-//    			if(leftSiblingPageId != null){
-//    				siblingPageL = (BTreeLeafPage) this.getPage(tid, leftSiblingPageId, Permissions.READ_WRITE);
-//    				//check if enough to steal
-//    				
-//    				if(siblingPageL.getNumTuples() > siblingPageL.getMaxTuples()/2 ){
-//    					
-//    					
-//    					Iterator<BTreeEntry> parIt = parent.iterator();
-//    					BTreeEntry currEnt;
-//    					
-//    					while(parIt.hasNext()){
-//    						currEnt = parIt.next();
-//    						
-//    						if(currEnt.getLeftChild() == leftSiblingPageId){
-//    							if(currEnt.getRightChild() != page.getId()){
-//    								throw new DbException("something went wrong");
-//    							}
-//    	    					btfile.stealFromLeafPage(page, siblingPageL,parent , currEnt , false);
-//    							return;
-//    						}
-//    					}
-//    				}
-//    				
-//    				canMergeL = true;
-//    			}else if(rightSiblingPageId != null){
-//    				siblingPageR = (BTreeLeafPage) this.getPage(tid, rightSiblingPageId, Permissions.READ_WRITE);
-//    				//check if enough to steal
-//    				
-//    				if(siblingPageR.getNumTuples() > siblingPageR.getMaxTuples()/2 ){
-//    					
-//    					
-//    					Iterator<BTreeEntry> parIt = parent.iterator();
-//    					BTreeEntry currEnt;
-//    					
-//    					while(parIt.hasNext()){
-//    						currEnt = parIt.next();
-//    						
-//    						if(currEnt.getLeftChild() == page.getId()){
-//    							if(currEnt.getRightChild() != rightSiblingPageId){
-//    								throw new DbException("something went wrong");
-//    							}
-//    	    					btfile.stealFromLeafPage(page, siblingPageR,parent , currEnt , true);
-//    							return;
-//    						}
-//    					}
-//    				}
-//    				canMergeR = true;
-//    			}
-//    			
-//    			
-//    			if(canMergeL){
-//    				//merge
-//    				
-//    				Iterator<BTreeEntry> parIt = parent.iterator();
-//					BTreeEntry currEnt;
-//    				
-//    				while(parIt.hasNext()){
-//						currEnt = parIt.next();
-//						
-//						if(currEnt.getLeftChild() == leftSiblingPageId){
-//							if(currEnt.getRightChild() != page.getId()){
-//								throw new DbException("something went wrong");
-//							}
-//							btfile.mergeLeafPages(tid, new HashMap<PageId,Page>(), siblingPageL, page, parent, currEnt);
-//							return;
-//						}
-//    				}
-//    			}else if(canMergeR){
-//    				Iterator<BTreeEntry> parIt = parent.iterator();
-//					BTreeEntry currEnt;
-//    				
-//    				while(parIt.hasNext()){
-//						currEnt = parIt.next();
-//						
-//						if(currEnt.getLeftChild() == page.getId()){
-//							if(currEnt.getRightChild() != rightSiblingPageId){
-//								throw new DbException("something went wrong");
-//							}
-//							btfile.mergeLeafPages(tid, new HashMap<PageId,Page>(), page, siblingPageR, parent, currEnt);
-//							return;
-//						}
-//    				}
-//    			}else{
-//    				throw new DbException("What is code?");
-//    			}
-//    			
-//    		}
+    		if(page.getNumTuples() < page.getMaxTuples()/2){
+    			BTreeLeafPage siblingPageL = null;
+    			BTreeLeafPage siblingPageR = null;
+    			PageId leftSiblingPageId = page.getLeftSiblingId();
+    			PageId rightSiblingPageId = page.getRightSiblingId();
+    			BTreeInternalPage parent = (BTreeInternalPage) this.getPage(tid, page.getParentId(), Permissions.READ_WRITE);
+    			BTreeFile btfile = (BTreeFile) Database.getCatalog().getDatabaseFile(page.getId().getTableId());
+    			boolean canMergeL = false;
+    			boolean canMergeR = false;
+
+    			
+    			if(leftSiblingPageId != null){
+    				siblingPageL = (BTreeLeafPage) this.getPage(tid, leftSiblingPageId, Permissions.READ_WRITE);
+    				//check if enough to steal
+    				
+    				if(siblingPageL.getNumTuples() > siblingPageL.getMaxTuples()/2 ){
+    					
+    					
+    					Iterator<BTreeEntry> parIt = parent.iterator();
+    					BTreeEntry currEnt;
+    					
+    					while(parIt.hasNext()){
+    						currEnt = parIt.next();
+    						
+    						if(currEnt.getLeftChild() == leftSiblingPageId){
+    							if(currEnt.getRightChild() != page.getId()){
+    								throw new DbException("something went wrong");
+    							}
+    	    					btfile.stealFromLeafPage(page, siblingPageL,parent , currEnt , false);
+    							return;
+    						}
+    					}
+    				}
+    				
+    				canMergeL = true;
+    			}else if(rightSiblingPageId != null){
+    				siblingPageR = (BTreeLeafPage) this.getPage(tid, rightSiblingPageId, Permissions.READ_WRITE);
+    				//check if enough to steal
+    				
+    				if(siblingPageR.getNumTuples() > siblingPageR.getMaxTuples()/2 ){
+    					
+    					
+    					Iterator<BTreeEntry> parIt = parent.iterator();
+    					BTreeEntry currEnt;
+    					
+    					while(parIt.hasNext()){
+    						currEnt = parIt.next();
+    						
+    						if(currEnt.getLeftChild() == page.getId()){
+    							if(currEnt.getRightChild() != rightSiblingPageId){
+    								throw new DbException("something went wrong");
+    							}
+    	    					btfile.stealFromLeafPage(page, siblingPageR,parent , currEnt , true);
+    							return;
+    						}
+    					}
+    				}
+    				canMergeR = true;
+    			}
+    			
+    			
+    			if(canMergeL){
+    				//merge
+    				
+    				Iterator<BTreeEntry> parIt = parent.iterator();
+					BTreeEntry currEnt;
+    				
+    				while(parIt.hasNext()){
+						currEnt = parIt.next();
+						
+						if(currEnt.getLeftChild() == leftSiblingPageId){
+							if(currEnt.getRightChild() != page.getId()){
+								throw new DbException("something went wrong");
+							}
+							btfile.mergeLeafPages(tid, new HashMap<PageId,Page>(), siblingPageL, page, parent, currEnt);
+							return;
+						}
+    				}
+    			}else if(canMergeR){
+    				//merge
+    			}else{
+    				
+    			}
+    			
+    		
+    			
+    			
+    			
+    		}
     		
         	//mark page as dirty
         	page.markDirty(true,tid);

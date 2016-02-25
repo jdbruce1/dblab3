@@ -1030,8 +1030,6 @@ public class BTreeFile implements DbFile {
 		
 		// move tuples from right to left
 		
-		System.out.println("current number of pages: " + this.numPages());
-		
 		Iterator<Tuple> rightIt = rightPage.iterator();
 		Tuple currTup;
 		
@@ -1070,8 +1068,7 @@ public class BTreeFile implements DbFile {
 		// delete the page
 		
 		this.setEmptyPage(tid, dirtypages, rightPage.getId().pageNumber());
-		System.out.println("current number of pages: " + this.numPages());
-
+		
 	}
 
 	/**

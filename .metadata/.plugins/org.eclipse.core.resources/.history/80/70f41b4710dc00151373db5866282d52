@@ -178,142 +178,22 @@ public class BufferPool {
      * @param tid the transaction deleting the tuple.
      * @param t the tuple to delete
      */
-    public void deleteTuple(TransactionId tid, Tuple t)
+    public  void deleteTuple(TransactionId tid, Tuple t)
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
     	
-    	Page pageIn = Database.getBufferPool().getPage(tid, t.recId.getPageId(), Permissions.READ_WRITE);
-    	
-    	if(pageIn instanceof HeapPage){
-    	
     	//get a page from bufferpool based on parameters passed
-    		HeapPage page = (HeapPage) pageIn;
-    		//delete the tuple from that page
-        	page.deleteTuple(t);
-        	
-        	//mark page as dirty
-        	page.markDirty(true,tid);
-
-          	//store page in the cache
-        	pages.put(page.getId(), page);
-    		
-    	}else if(pageIn instanceof BTreeLeafPage){
-    		BTreeLeafPage page = (BTreeLeafPage) pageIn;
-    		
-    		page.deleteTuple(t);
-        	
-//    		if(page.getNumTuples() < page.getMaxTuples()/2){
-//    			BTreeLeafPage siblingPageL = null;
-//    			BTreeLeafPage siblingPageR = null;
-//    			PageId leftSiblingPageId = page.getLeftSiblingId();
-//    			PageId rightSiblingPageId = page.getRightSiblingId();
-//    			BTreeInternalPage parent = (BTreeInternalPage) this.getPage(tid, page.getParentId(), Permissions.READ_WRITE);
-//    			BTreeFile btfile = (BTreeFile) Database.getCatalog().getDatabaseFile(page.getId().getTableId());
-//    			boolean canMergeL = false;
-//    			boolean canMergeR = false;
-//
-//    			
-//    			if(leftSiblingPageId != null){
-//    				siblingPageL = (BTreeLeafPage) this.getPage(tid, leftSiblingPageId, Permissions.READ_WRITE);
-//    				//check if enough to steal
-//    				
-//    				if(siblingPageL.getNumTuples() > siblingPageL.getMaxTuples()/2 ){
-//    					
-//    					
-//    					Iterator<BTreeEntry> parIt = parent.iterator();
-//    					BTreeEntry currEnt;
-//    					
-//    					while(parIt.hasNext()){
-//    						currEnt = parIt.next();
-//    						
-//    						if(currEnt.getLeftChild() == leftSiblingPageId){
-//    							if(currEnt.getRightChild() != page.getId()){
-//    								throw new DbException("something went wrong");
-//    							}
-//    	    					btfile.stealFromLeafPage(page, siblingPageL,parent , currEnt , false);
-//    							return;
-//    						}
-//    					}
-//    				}
-//    				
-//    				canMergeL = true;
-//    			}else if(rightSiblingPageId != null){
-//    				siblingPageR = (BTreeLeafPage) this.getPage(tid, rightSiblingPageId, Permissions.READ_WRITE);
-//    				//check if enough to steal
-//    				
-//    				if(siblingPageR.getNumTuples() > siblingPageR.getMaxTuples()/2 ){
-//    					
-//    					
-//    					Iterator<BTreeEntry> parIt = parent.iterator();
-//    					BTreeEntry currEnt;
-//    					
-//    					while(parIt.hasNext()){
-//    						currEnt = parIt.next();
-//    						
-//    						if(currEnt.getLeftChild() == page.getId()){
-//    							if(currEnt.getRightChild() != rightSiblingPageId){
-//    								throw new DbException("something went wrong");
-//    							}
-//    	    					btfile.stealFromLeafPage(page, siblingPageR,parent , currEnt , true);
-//    							return;
-//    						}
-//    					}
-//    				}
-//    				canMergeR = true;
-//    			}
-//    			
-//    			
-//    			if(canMergeL){
-//    				//merge
-//    				
-//    				Iterator<BTreeEntry> parIt = parent.iterator();
-//					BTreeEntry currEnt;
-//    				
-//    				while(parIt.hasNext()){
-//						currEnt = parIt.next();
-//						
-//						if(currEnt.getLeftChild() == leftSiblingPageId){
-//							if(currEnt.getRightChild() != page.getId()){
-//								throw new DbException("something went wrong");
-//							}
-//							btfile.mergeLeafPages(tid, new HashMap<PageId,Page>(), siblingPageL, page, parent, currEnt);
-//							return;
-//						}
-//    				}
-//    			}else if(canMergeR){
-//    				Iterator<BTreeEntry> parIt = parent.iterator();
-//					BTreeEntry currEnt;
-//    				
-//    				while(parIt.hasNext()){
-//						currEnt = parIt.next();
-//						
-//						if(currEnt.getLeftChild() == page.getId()){
-//							if(currEnt.getRightChild() != rightSiblingPageId){
-//								throw new DbException("something went wrong");
-//							}
-//							btfile.mergeLeafPages(tid, new HashMap<PageId,Page>(), page, siblingPageR, parent, currEnt);
-//							return;
-//						}
-//    				}
-//    			}else{
-//    				throw new DbException("What is code?");
-//    			}
-//    			
-//    		}
-    		
-        	//mark page as dirty
-        	page.markDirty(true,tid);
-
-          	//store page in the cache
-        	pages.put(page.getId(), page);
-    		
-    	}else{
-    		throw new DbException("page is not a type of page");
-    	}
+    	HeapPage page = (HeapPage) Database.getBufferPool().getPage(tid, t.recId.getPageId(), Permissions.READ_WRITE);
     	    	
+    	//delete the tuple from that page
+    	page.deleteTuple(t);
     	
-  
+    	//mark page as dirty
+    	page.markDirty(true,tid);
+
+      	//store page in the cache
+    	pages.put(page.getId(), page);
     	
     }
 

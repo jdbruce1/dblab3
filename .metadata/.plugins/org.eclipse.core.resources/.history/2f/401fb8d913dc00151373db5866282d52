@@ -1070,8 +1070,7 @@ public class BTreeFile implements DbFile {
 		// delete the page
 		
 		this.setEmptyPage(tid, dirtypages, rightPage.getId().pageNumber());
-		System.out.println("current number of pages: " + this.numPages());
-
+		
 	}
 
 	/**
