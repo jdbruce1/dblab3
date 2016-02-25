@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="BTreeFileInsertTest" project="lab3" tests="3" started="3" failures="0" errors="0" ignored="0">
-  <testsuite name="simpledb.BTreeFileInsertTest" time="0.055">
-    <testcase name="testSplitLeafPages" classname="simpledb.BTreeFileInsertTest" time="0.001"/>
-    <testcase name="testSplitInternalPages" classname="simpledb.BTreeFileInsertTest" time="0.041"/>
-    <testcase name="testReusePage" classname="simpledb.BTreeFileInsertTest" time="0.013"/>
-  </testsuite>
-</testrun>
